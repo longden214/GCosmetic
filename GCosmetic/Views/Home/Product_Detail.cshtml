@@ -1,0 +1,247 @@
+﻿
+@{
+    var pro = ViewBag.Product;
+
+    ViewBag.Title = pro.name;
+    ViewBag.Description = pro.description;
+
+    var attrList = ViewBag.ProAttributes;
+    var valueList = ViewBag.AttrValues;
+}
+
+@section fscripts{
+    <script>
+
+        $(".list-pro-variations .pro-variation").on('click', function (e) {
+            skus = {};
+            $(".list-pro-variations .pro-variation.active").each(function () {
+                skus[$(this).parent().prev().html()] = $(this).html();
+            });
+
+            var sku_attr = JSON.stringify(skus);
+            $.ajax({
+                url: '@Url.Action("SkuPrice","Home")',
+                type: 'GET',
+                data: { skuAttr: sku_attr, proId : '@pro.id'},
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data != -1) {
+                        if (data == 0) {
+                            $('.productIten-price').html("Liên hệ");
+                        } else {
+                            var dataStr = data.toString();
+                            $('.productIten-price').html(dataStr.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + " VNĐ");
+                        }
+                    }
+
+                }
+            });
+        });
+    </script>
+}
+
+<!-- Breadcrumb Area Start Here -->
+<div class="breadcrumb-area">
+    <div class="container">
+        <ol class="breadcrumb breadcrumb-list">
+            <li class="breadcrumb-item active">CHI TIẾT SẢN PHẨM</li>
+        </ol>
+    </div>
+</div>
+<!-- Breadcrumb Area End Here -->
+<!-- Product Thumbnail Start -->
+<div class="main-product-thumbnail white-bg ptb-90">
+    <div class="container">
+        <div class="row">
+            <!-- Main Thumbnail Image Start -->
+            <div class="col-lg-4 col-md-6 mb-all-40">
+                <!-- Thumbnail Large Image start -->
+                <div class="tab-content">
+                    @{ var i = 0; var id = "thumb" + "" + i.ToString();}
+                    @foreach (string item in ViewBag.img_list)
+                    {
+                        if (i == 0)
+                        {
+                            <div id="@id" class="tab-pane fade show active">
+                                <a data-fancybox="images" href="@item"><img src="@item" alt="product-view"></a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div id="@id" class="tab-pane fade">
+                                <a data-fancybox="images" href="@item"><img src="@item" alt="product-view"></a>
+                            </div>
+                        }
+
+                        i++;
+                        id = "thumb" + "" + i.ToString();
+                    }
+                </div>
+                <!-- Thumbnail Large Image End -->
+                <!-- Thumbnail Image End -->
+                <div class="product-thumbnail">
+                    <div class="thumb-menu owl-carousel nav tabs-area" role="tablist">
+                        @{ var j = 0; var id1 = "#thumb" + "" + j.ToString();}
+                        @foreach (string item in ViewBag.img_list)
+                        {
+                            if (j == 0)
+                            {
+                                <a class="active" data-toggle="tab" href="@id1"><img src="@item" alt="product-thumbnail"></a>
+                            }
+                            else
+                            {
+                                <a data-toggle="tab" href="@id1"><img src="@item" alt="product-thumbnail"></a>
+                            }
+
+                            j++;
+                            id1 = "#thumb" + "" + j.ToString();
+                        }
+                    </div>
+                </div>
+                <!-- Thumbnail image end -->
+            </div>
+            <!-- Main Thumbnail Image End -->
+            <!-- Thumbnail Description Start -->
+            <div class="col-lg-8 col-md-6">
+                <div class="thubnail-desc fix">
+                    <h3 class="product-header">@pro.name</h3>
+
+                    <div class="pro-thumb-price mt-10">
+                        <p class="d-flex align-items-center">
+                            <span class="price productIten-price">@ViewBag.price</span>
+                        </p>
+                    </div>
+                    <p class="pro-desc-details">
+                        @pro.description
+                    </p>
+                    @foreach (var attr in attrList)
+                    {
+                        <div class="product-variations " id="product-variations_@(@attr.attribute_id)">
+                            <label>@attr.name</label>
+                            <div class="list-pro-variations">
+                                @foreach (var attrValue in valueList)
+                                {
+                                    if (attr.attribute_id == attrValue.attribute_id)
+                                    {
+                                        if (attrValue.status)
+                                        {
+                                            <button type="button" class="pro-variation">@attrValue.name</button>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="pro-variation pro-variation--disabled" disabled>@attrValue.name</button>
+                                        }
+
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                    <!--
+                    <div class="quatity-stock">
+                        <label>Quantity</label>
+                        <ul class="d-flex flex-wrap  align-items-center">
+                            <li class="box-quantity">
+                                <form action="#">
+                                    <input class="quantity" type="number" min="1" value="1">
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                    -->
+                </div>
+            </div>
+            <!-- Thumbnail Description End -->
+        </div>
+        <!-- Row End -->
+    </div>
+    <!-- Container End -->
+</div>
+<!-- Product Thumbnail End -->
+<!-- Product Thumbnail Description Start -->
+<div class="thumnail-desc">
+    <div class="container">
+        <div class="thumb-desc-inner">
+            <div class="row">
+                <div class="col-sm-12">
+                    <ul class="main-thumb-desc nav tabs-area" role="tablist">
+                        <li><a class="active" data-toggle="tab" href="#dtail">MÔ TẢ SẢN PHẨM</a></li>
+                    </ul>
+                    <!-- Product Thumbnail Tab Content Start -->
+                    <div class="tab-content thumb-content">
+                        <div id="dtail" class="tab-pane fade show active">
+                            @Html.Raw(pro.content)
+
+                        </div>
+
+                    </div>
+                    <!-- Product Thumbnail Tab Content End -->
+                </div>
+            </div>
+            <!-- Row End -->
+        </div>
+    </div>
+    <!-- Container End -->
+</div>
+<!-- Product Thumbnail Description End -->
+<!-- New Arrival Products Start Here -->
+<div class="new-arrival no-border-style ptb-90">
+    <div class="container">
+        <!-- Section Title Start -->
+        <div class="section-title text-center">
+            <h2>CÁC SẢN PHẨM LIÊN QUAN</h2>
+            <p>Thêm những người mới đến của chúng tôi vào danh sách hàng tuần của bạn</p>
+        </div>
+        <!-- Section Title End -->
+        <div class="our-pro-active owl-carousel">
+            @foreach (var item in ViewBag.Related)
+            {
+
+                var pr = "";
+                var priceStr = String.Format("{0:#,##0}", item.price);
+                var priceMaxStr = String.Format("{0:#,##0}", item.priceMax);
+                var priceMinStr = String.Format("{0:#,##0}", item.priceMin);
+
+                if (item.price > 0)
+                {
+                    pr = priceStr + " VNĐ";
+                }
+                else
+                {
+
+                    if (item.priceMax == item.priceMin && item.priceMax > 0 && item.priceMin > 0)
+                    {
+                        pr = priceMaxStr + " VNĐ";
+                    }
+                    else if (item.priceMax == 0 && item.priceMin == 0 && item.price == 0)
+                    {
+                        pr = "Liên hệ";
+                    }
+                    else
+                    {
+                        pr = priceMinStr + " ~ " + priceMaxStr + " VNĐ";
+                    }
+                }
+
+                <div class="single-makal-product">
+                    <div class="pro-img">
+                        <a href="/chi-tiet/@item.slug-@item.id" title="@item.name">
+                            <img src="@item.image" alt="product-img">
+                        </a>
+                    </div>
+                    <div class="pro-content">
+                        <h4 class="pro-title">
+                            <a href="/chi-tiet/@item.slug-@item.id" title="@item.name">@item.name</a>
+                        </h4>
+                        <p>
+                            <span class="price">@pr</span>
+                        </p>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+<!-- New Arrival Products End Here -->

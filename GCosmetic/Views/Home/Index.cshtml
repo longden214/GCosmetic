@@ -1,0 +1,222 @@
+﻿@{
+    ViewBag.Title = "G Cosmetics - Mua sự yên tâm";
+    ViewBag.Description = "G Cosmetics cam kết sản phẩm chính hãng với tiêu chí : Yên tâm về giá - Yên tâm về chất lượng - Yên tâm về phục vụ.";
+}
+@section fscripts{
+    <script src="~/Scripts/vendor/FHomeController.js"></script>
+}
+<!-- Breadcrumb Area Start Here -->
+<div class="breadcrumb-area">
+    <div class="container">
+        <ol class="breadcrumb breadcrumb-list">
+            <li class="breadcrumb-item active">TRANG CHỦ</li>
+        </ol>
+    </div>
+</div>
+<!-- Breadcrumb Area End Here -->
+<!-- Shop Page Start -->
+<div class="main-shop-page ptb-90">
+    <div class="container">
+        <!-- Row End -->
+        <div class="row">
+            <!-- Sidebar Shopping Option Start -->
+            <div class="col-lg-3 order-2 order-lg-1 mt-all-40">
+                <div class="sidebar shop-sidebar">
+                    <!-- Price Filter Options Start -->
+                    <div class="search-filter mb-30 sidebar-range-price">
+                        <h3 class="sidebar-title">Lọc theo giá</h3>
+
+                        <div class="price-range-filter__inputs">
+                            <input type="number" onkeydown="javascript: return event.keyCode === 8 ||event.keyCode === 46 && !event.key == '' ? true : !isNaN(Number(event.key))" maxlength="13" class="price-range-filter__input" id="price-range-min" placeholder="₫ FROM" value="">
+                            <span> - </span>
+                            <input type="number" onkeydown="javascript: return event.keyCode === 8 ||event.keyCode === 46 && !event.key == '' ? true : !isNaN(Number(event.key))" maxlength="13" class="price-range-filter__input" id="price-range-max" placeholder="₫ TO" value="">
+                        </div>
+                        <div class="price-range-filter__inputs-error"></div>
+                        <button type="submit" class="button-solid button-solid--primary btn-filter-price-product">Filter</button>
+
+                    </div>
+                    <!-- Price Filter Options End -->
+                    <!-- Sidebar Categorie Start -->
+                    <div class="sidebar-categorie categorie-filter mb-30">
+                        <h3 class="sidebar-title">Danh mục</h3>
+                        <ul class="sidbar-style collapsed">
+                            @{ var i = 1;}
+                            @foreach (var CateItem in ViewBag.CateList)
+                            {
+                                if (i > 6)
+                                {
+                                    if (i == 7)
+                                    {
+                                        <li class="form-check more">Xem thêm <i class="fa fa-angle-down" aria-hidden="true"></i></li>
+                                    }
+                                    <li class="form-check extra">
+                                        <input class="form-check-input" value="@CateItem.CateId" id="@CateItem.CateName" type="checkbox">
+                                        <label class="form-check-label" for="@CateItem.CateName">@CateItem.CateName (@CateItem.CateCount)</label>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="form-check">
+                                        <input class="form-check-input" value="@CateItem.CateId" id="@CateItem.CateName" type="checkbox">
+                                        <label class="form-check-label" for="@CateItem.CateName">@CateItem.CateName (@CateItem.CateCount)</label>
+                                    </li>
+                                }
+                                i++;
+                            }
+                            @*<li class="form-check extra less">Thu gọn <i class="fa fa-angle-up" aria-hidden="true"></i></li>*@
+                        </ul>
+                        <span class="btn-category-extra less"> Thu gọn <i class="fa fa-angle-up" aria-hidden="true"></i> </span>
+                    </div>
+                    <!-- Sidebar Categorie Start -->
+                    <!-- Sidebar Categorie Start -->
+                    <div class="sidebar-categorie brand-filter">
+                        <h3 class="sidebar-title">Thương hiệu</h3>
+                        <ul class="sidbar-style collapsed">
+                            @{ var j = 1;}
+                            @foreach (var BrandItem in ViewBag.BrandList)
+                            {
+                                if (j > 6)
+                                {
+                                    if (j == 7)
+                                    {
+                                        <li class="form-check more">Xem thêm <i class="fa fa-angle-down" aria-hidden="true"></i></li>
+                                    }
+
+                                    <li class="form-check extra">
+                                        <input class="form-check-input" value="@BrandItem.brandName" id="@BrandItem.brandName" type="checkbox">
+                                        <label class="form-check-label " for="@BrandItem.brandName">@BrandItem.brandName</label>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="form-check">
+                                        <input class="form-check-input" value="@BrandItem.brandName" id="@BrandItem.brandName" type="checkbox">
+                                        <label class="form-check-label " for="@BrandItem.brandName">@BrandItem.brandName</label>
+                                    </li>
+                                }
+                                j++;
+                            }
+                            @*<li class="form-check extra less">Thu gọn <i class="fa fa-angle-up" aria-hidden="true"></i></li>*@
+                        </ul>
+                        <span class="btn-brand-extra less"> Thu gọn <i class="fa fa-angle-up" aria-hidden="true"></i> </span>
+                    </div>
+                    <!-- Sidebar Categorie Start -->
+                    <br/>
+                    <button type="submit" class="button-solid button-solid--primary btn-remove-all-filter">Xóa tất cả</button>
+
+                </div>
+                <!-- Single Banner Start -->
+
+            </div>
+            <!-- Sidebar Shopping Option End -->
+            <!-- Product Categorie List Start -->
+            <div class="col-lg-9 order-1 order-lg-2">
+                <!-- Grid & List View Start -->
+                <div class="shop-products-grid-list grid-list-top border-default universal-padding d-md-flex justify-content-md-between align-items-center mb-30">
+                    <div class="grid-list-view d-flex align-items-center  mb-sm-15">
+                        <ul class="nav tabs-area d-flex align-items-center">
+                            <li>
+                                <a class="active" data-toggle="tab" href="#grid-view">
+                                    <i class="fa fa-th"></i>
+                                </a>
+                            </li>
+                            <li><a data-toggle="tab" href="#list-view"><i class="fa fa-list-ul"></i></a></li>
+                        </ul>
+                        <span class="show-items">Có <b class="show-items-lenght"></b> sản phẩm được tìm thấy.</span>
+                    </div>
+                    <!-- Toolbar Short Area Start -->
+                    <div class="main-toolbar-sorter clearfix">
+                        <div class="toolbar-sorter d-md-flex align-items-center " id="product-sorter">
+                            <label>Sort by:</label>
+                            <select class="sorter wide">
+                                <option value="id-desc">Mặc định</option>
+                                <option value="name-asc">Tên từ A đến Z</option>
+                                <option value="name-desc">Tên từ Z đến A</option>
+                                <option value="price-asc">Giá từ thấp đến cao</option>
+                                <option value="price-desc">Giá từ cao đến thấp</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Toolbar Short Area End -->
+                </div>
+                <!-- Grid & List View End -->
+                <div class="shop-area mb-all-40 shop-product-ares">
+                    <!-- Grid & List Main Area End -->
+                    <div class="tab-content">
+                        <div id="grid-view" class="tab-pane fade show active">
+                            <div class="row border-hover-effect product-gcosmetic-grid-view">
+
+                            </div>
+                            <!-- Row End -->
+                        </div>
+                        <!-- #grid view End -->
+                        <div id="list-view" class="tab-pane fade fix product-gcosmetic-list-view">
+
+                        </div>
+                        <!-- #list view End -->
+                    </div>
+                    <!-- Grid & List Main Area End -->
+                </div>
+                <!-- Shop Breadcrumb Area Start -->
+                <div class="shop-breadcrumb-area border-default mt-30 shop-product-pagination">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <ul class="pfolio-breadcrumb-list text-center">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Shop Breadcrumb Area End -->
+                <p class="shop-product-info"><i class="fa fa-frown-o" aria-hidden="true"></i> Không tìm thấy sản phẩm nào phù hợp với lựa chọn của bạn.</p>
+            </div>
+            <!-- product Categorie List End -->
+        </div>
+        <!-- Row End -->
+    </div>
+    <!-- Container End -->
+</div>
+<!-- Shop Page End -->
+
+<script id="product_grid_view_teamplate" type="x-tmpl-mustache">
+    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
+        <!-- Single Product Start Here -->
+        <div class="single-makal-product">
+            <div class="pro-img">
+                <a href="/chi-tiet/{{Slug}}-{{ProId}}" title="{{ProName}}">
+                    <img src="{{Image}}" alt="product-img">
+                </a>
+            </div>
+            <div class="pro-content">
+                <h4 class="pro-title">
+                    <a href="/chi-tiet/{{Slug}}-{{ProId}}" title="{{ProName}}">{{ProName}}</a>
+                </h4>
+                <p>
+                    <span class="price">{{Price}}</span>
+                </p>
+            </div>
+        </div>
+        <!-- Single Product End Here -->
+    </div>
+</script>
+
+<script id="product_list_view_teamplate" type="x-tmpl-mustache">
+    <div class="single-makal-product">
+        <div class="pro-img">
+            <a href="/chi-tiet/{{Slug}}-{{ProId}}" title="{{ProName}}">
+                <img src="{{Image}}" alt="product-img">
+            </a>
+        </div>
+        <div class="pro-content">
+            <h4 class="pro-title">
+                <a href="/chi-tiet/{{Slug}}-{{ProId}}" title="{{ProName}}">{{ProName}}</a>
+            </h4>
+
+            <p>
+                <span class="price">{{Price}}</span>
+            </p>
+            <p>
+                {{Description}}
+            </p>
+        </div>
+    </div>
+</script>

@@ -1,0 +1,402 @@
+﻿@model GCosmetic.Models.product
+@{
+    ViewBag.Title = "Cập nhật sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+}
+
+@section scripts{
+    <script src="~/Content/admin/assets/js/ProductController.js"></script>
+    <script>
+        $('#product-add-category').select2();
+        CKEDITOR.replace("product-content");
+        var imgList = '@Model.image_list';
+        var subImg = imgList.split(',');
+        if (subImg.length > 0) {
+            var $imgRepeater = $('.upload-images').repeater();
+
+            $('.classify-group .classify-item:first-child .classify-delete').css('display', 'none');
+
+            var $AttrValueRepeater = $('.classify-group').repeater({
+                isFirstItemUndeletable: true,
+                show: function () {
+                    console.log('outer show2');
+                    $(this).slideDown();
+
+                    var numClassify = $('.classify-item').length;
+                    if (numClassify == 2) {
+                        $('.classify-item:nth-of-type(2) .col-form-label').html('<label for="first-name">Phân loại 2</label>');
+                        $('.classify-group .classify-item:nth-child(2) .classify-delete').css('display', 'block');
+                    }
+
+                    if (numClassify == 1) {
+                        $('.add-new-classify .col-form-label').html('<label for="first-name">Phân loại 2</label>');
+                    }
+
+                },
+                hide: function (deleteElement) {
+                    console.log('outer delete');
+                    $(this).slideUp(deleteElement);
+                },
+                repeaters: [{
+                    isFirstItemUndeletable: true,
+                    selector: '.classify-box-list',
+                    show: function () {
+                        
+                        $(this).slideDown();
+                    },
+                    hide: function (deleteElement) {
+                        $(this).slideUp(deleteElement);
+                    }
+                }]
+            });
+            
+        var subImg2 = [];
+        for (var i = 0; i < subImg.length; ++i) {
+            subImg2.push({ 'img-url': subImg[i] });
+        }
+
+        $imgRepeater.setList(subImg2);
+
+        $(".upload-image-list .upload-image-item").each(function () {
+            var row = $(this);
+
+            var imgValue = row.find("input.img-url-item").val();
+            row.find('.show-image').attr('data-url', imgValue);
+            row.find('.show-image').attr('style', 'background-image:url(' + imgValue + ')');
+        });
+
+        }
+
+        if ('@Model.price' == 0 || '@Model.price' == '') {
+            $('.classification-details').css('display', 'block');
+            $('.product-pr').css('display', 'none');
+            $('.classify-add').css('display', 'none');
+
+            var attrList = @Html.Raw(Json.Encode(@ViewBag.ProAttributes));
+            var attrValueList = @Html.Raw(Json.Encode(@ViewBag.AttrValues));
+
+            var subAttrValue = [];
+            $.each(attrList, function (index, value) {
+                subAttrValue.push({ 'classify_name': value.name,'classify_group_item':[] });
+                $.each(attrValueList, function (index2, value2) {
+                    if (value.attribute_id == value2.AttrId) {
+                        subAttrValue[index].classify_group_item.push({ 'classify_group_item_name': value2.ValueName, 'classify_group_item_status': value2.Status});
+                    }
+                });
+            });
+
+            $AttrValueRepeater.setList(subAttrValue);
+
+            $(".classify-item .classify-box-list .classify-item2").each(function () {
+                var row = $(this);
+
+                var status = row.find("input.status-n4").val();
+
+                if (status == 'true') {
+                    row.find("input.status-n3").attr('checked', status);
+                }
+                
+            });
+
+            $('.classify-table thead > tr >th:first').text(subAttrValue[0].classify_name);
+            var countValue = 1;
+            if (subAttrValue.length == 2) {
+                $('.add-new-classify').css('display', 'none');
+
+                $('.classify-list').find('.classify-table thead tr th:first').after('<th scope="col">Tên</th>');
+                $('.classify-list').find('.classify-table tbody tr td:nth-of-type(1)').after('<td scope="row">Loại</td>');
+
+                $('.classify-table thead > tr >th:nth-child(2)').text(subAttrValue[1].classify_name);
+                countValue = subAttrValue[1].classify_group_item.length;
+            }
+
+            $('.classify-table tbody').remove();
+            var classify_table_tbody = "";
+            $.each(subAttrValue[0].classify_group_item, function (index, value) {
+                if (subAttrValue.length == 1) {
+                    classify_table_tbody += '<tbody><tr><td rowspan="' + countValue + '" scope="rowgroup">' + value.classify_group_item_name + '</td><td><input type="text" class="form-control form-control-sm" id="colFormLabelSm" name="classify-price" placeholder="Nhập Giá"></td><td><input type="text" class="form-control form-control-sm" id="colFormLabelSm" name="classify-sku" placeholder="Nhập SKU"></td></tr></tbody>';
+                }
+                if (subAttrValue.length == 2) {
+                    classify_table_tbody += '<tbody>';
+                    $.each(subAttrValue[1].classify_group_item, function (index2, value2) {
+                        if (index2 == 0) {
+                            classify_table_tbody += '<tr><td rowspan="' + countValue + '" scope="rowgroup">' + value.classify_group_item_name + '</td><td scope="row">' + value2.classify_group_item_name +'</td><td><input type="text" class="form-control form-control-sm" id="colFormLabelSm" name="classify-price" placeholder="Nhập Giá"></td><td><input type="text" class="form-control form-control-sm" id="colFormLabelSm" name="classify-sku" placeholder="Nhập SKU"></td></tr>';
+                        } else {
+                            classify_table_tbody += '<tr><td scope="row">' + value2.classify_group_item_name + '</td><td><input type="text" class="form-control form-control-sm" id="colFormLabelSm" name="classify-price" placeholder="Nhập Giá"></td><td><input type="text" class="form-control form-control-sm" id="colFormLabelSm" name="classify-sku" placeholder="Nhập SKU"></td></tr>';
+                        }
+                    });
+                    classify_table_tbody += '</tbody>';
+                }
+             });
+
+            $('.classify-table').append(classify_table_tbody);
+
+            var skuList = @Html.Raw(Json.Encode(@ViewBag.ProSkus));
+            if (skuList.length > 0) {
+                var i = 0;
+                $(".classify-table tbody tr").each(function () {
+                    var row = $(this);
+                    row.find("input[name='classify-price']").attr('data-stt', i);
+                    row.find("input[name='classify-sku']").attr('data-stt', i);
+                    $.each(skuList, function (index, value) {
+                        row.find("input[data-stt=" + index +"][name='classify-price']").val(value.price);
+                        row.find("input[data-stt=" + index +"][name='classify-sku']").val(value.sku1);
+                    });
+                    i++;
+                });
+            }
+        } else {
+            $('.classification-details').css('display', 'none');
+            $('.product-pr').css('display', 'block');
+            $('.classify-add').css('display', 'block');
+        }
+    </script>
+}
+
+<div class="content-header row">
+    <div class="content-header-left col-md-9 col-12 mb-2">
+        <div class="row breadcrumbs-top">
+            <div class="col-12">
+                <h2 class="content-header-title float-left mb-0">Quản lý sản phẩm</h2>
+                <div class="breadcrumb-wrapper">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="index.html">Trang chủ</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            Thêm mới sản phẩm
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content-header-right text-md-right col-md-3 col-12 d-md-block d-none">
+    </div>
+</div>
+<div class="content-body">
+    <section class="invoice-edit-wrapper">
+        <form class="needs-validation" novalidate="">
+            <div class="row invoice-edit">
+                <div class="col-xl-9 col-md-8 col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Thêm mới</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label" for="basic-addon-name">Tên sản phẩm</label>
+                                <input type="hidden" id="product-edit-id" value="@Model.id" />
+                                <input type="text" id="product-add-name" value="@Model.name" class="form-control" placeholder="Name" aria-label="Name" aria-describedby="basic-addon-name" required="">
+                                <div class="invalid-feedback" style="display:block;"></div>
+                            </div>
+                            <div class="form-group  category-select">
+                                <label for="select-category">Danh mục</label>
+                                @Html.DropDownList("category_id", (IEnumerable<SelectListItem>)ViewBag.CateList, "-- Chọn --", new { @id = "product-add-category", @class = "form-control" })
+                                <div class="invalid-feedback cate-error-message" style="display:block;"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="basic-addon-name">Thương hiệu</label>
+                                <div class="product-brand-box">
+                                    <input type="text" id="product-add-brand" value="@Model.brand" class="form-control" placeholder="Brand" aria-label="Name" aria-describedby="basic-addon-name">
+                                    <div class="product-brand-autocom-box">
+                                        <ul></ul>
+                                    </div>
+                                </div>
+                                <div class="invalid-feedback" style="display:block;"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="d-block" for="validationBioBootstrap">Mô tả</label>
+                                <textarea class="form-control" id="product-add-description" name="validationBioBootstrap" rows="3">@Model.description</textarea>
+                            </div>
+                            <div class="form-group mb-2 product-pr">
+                                <label class="form-label" for="basic-addon-name">Giá</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">đ</span>
+                                    </div>
+                                    <input type="text" class="form-control" value="@Model.price" id="product-add-price" placeholder="100000" aria-label="Amount (to the nearest dollar)">
+                                </div>
+                                <div class="invalid-feedback" style="display:block;"></div>
+                            </div>
+                            <div class="form-group classify-add">
+                                <label class="form-label" for="basic-addon-name">Phân loại hàng</label>
+                                <button type="button" class="btn btn-outline-primary btn-block waves-effect btn-add-classify">Thêm phân loại hàng</button>
+                            </div>
+                            <div class="classification-details">
+                                <div class="classify-group">
+                                    <div data-repeater-list="classify_group">
+                                        <div class="form-group row classify-item" data-repeater-item>
+                                            <div class="col-sm-3 col-form-label">
+                                                <label for="first-name">Phân loại 1</label>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <div class="classify-details-item">
+                                                    <div class="classify-name mb-2">
+                                                        <div class="form-group">
+                                                            <label for="first-name-vertical">Tên nhóm phân loại</label>
+                                                            <input type="text" id="first-name-vertical" class="form-control" name="classify_name" placeholder="Name" value="">
+                                                            <div class="invalid-feedback" style="display:block;"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="classify-box-list">
+                                                        <div data-repeater-list="classify_group_item">
+                                                            <label for="first-name-vertical">Phân loại hàng</label>
+                                                            <div class="form-group classify-item2" data-repeater-item>
+                                                                <div class="classify-box-list-item">
+                                                                    <input type="text" id="first-name-vertical" class="form-control attr-value-name" name="classify_group_item_name" placeholder="Name">
+                                                                    <span data-repeater-delete title="Xóa"><i class="far fa-trash-alt"></i></span>
+                                                                    <div class="form-check form-check-primary product-attr-status" title="Trạng thái">
+                                                                        <input type="checkbox" class="form-check-input status-n3">
+                                                                        <input type="hidden" class="status-n4" name="classify_group_item_status" value="" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="invalid-feedback" style="display:block;"></div>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" class="btn btn-outline-primary btn-block waves-effect btn-add-classify-table" data-repeater-create>Thêm</button>
+                                                    </div>
+                                                    <div class="classify-delete" data-repeater-delete><i class="fas fa-times"></i></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row add-new-classify">
+                                        <div class="col-sm-3 col-form-label">
+                                            <label for="first-name">Phân loại 2</label>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <button data-repeater-create type="button" class="btn btn-outline-primary btn-block waves-effect" id="btn-addnew-classify">Thêm</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="classify-tips">
+                                    <div class="form-group row">
+                                        <div class="col-sm-3 col-form-label">
+                                            <label for="first-name">Mẹo tiết lập nhanh</label>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <div class="row">
+                                                <div class="col-md-12 col-lg-7">
+                                                    <div class="tips-inputs">
+                                                        <div class="tip-price">
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-text" id="basic-addon1">đ</span>
+                                                                </div>
+                                                                <input type="text" class="form-control" placeholder="Giá" aria-label="Price" aria-describedby="basic-addon1">
+                                                            </div>
+                                                        </div>
+                                                        <div class="tip-sku">
+                                                            <input type="text" class="form-control" id="basicInput" placeholder="SKU phân loại">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 col-lg-5"><button type="button" class="btn btn-relief-primary tips-all-classify">Áp dụng cho tất cả phân loại</button></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="classify-list">
+                                    <div class="form-group row">
+                                        <div class="col-sm-3">
+                                            <label for="first-name">Danh sách phân loại hàng</label>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered classify-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Tên</th>
+                                                            <th scope="col">Giá</th>
+                                                            <th scope="col">Sku</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td rowspan="1" scope="rowgroup">Loại</td>
+                                                            <td>
+                                                                <input type="text" class="form-control form-control-sm" id="colFormLabelSm" name="classify-price" placeholder="Nhập Giá">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control form-control-sm" id="colFormLabelSm" name="classify-sku" placeholder="Nhập SKU">
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="cancel-classify">
+                                    <button type="button" class="btn btn-outline-danger btn-block waves-effect btn-cancel-classify">Hủy phân loại hàng</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="d-block" for="validationBioBootstrap">Hình ảnh sản phẩm</label>
+                            </div>
+                            <div class="upload-images mb-3">
+                                <div class="upload-image-list" id="card-drag-area" data-repeater-list="invoice">
+                                    <div class="upload-image-item" data-repeater-item>
+                                        <div class="icon-adds">
+                                            <i class="fas fa-plus"></i>
+                                        </div>
+                                        <div class="image-bg"></div>
+                                        <div class="show-image" data-url="" style=""></div>
+                                        <input type="text" hidden name="img-url" class="img-url-item" value="" />
+                                        <span class="icon-delete-img" data-repeater-delete><i class="fas fa-times-circle"></i></span>
+                                    </div>
+                                </div>
+                                <div class="upload-image__btn-add">
+                                    <button type="button" class="btn btn-gradient-primary" data-repeater-create>Thêm khung ảnh</button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="d-block" for="validationBioBootstrap">Chi tiết nội dung</label>
+                                <textarea class="form-control" id="product-content" name="validationBioBootstrap" rows="3">@Model.content</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="d-block" for="product-add-slug">Slug</label>
+                                <input type="text" value="@Model.slug" id="product-add-slug" class="form-control" placeholder="Slug" aria-label="Slug" aria-describedby="basic-addon-slug" required="">
+                                <div class="invalid-feedback" style="display:block;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-4 col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="d-block">Trạng thái</label>
+                                <div class="custom-control custom-radio my-50">
+                                    <input type="radio" id="validationRadio3" @(Model.status == true ? "checked" : "") name="validationRadioBootstrap" value="1" class="custom-control-input product-add-status" required="">
+                                    <label class="custom-control-label" for="validationRadio3">Hiện</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="validationRadio4" name="validationRadioBootstrap" @(Model.status == false ? "checked" : "") value="0" class="custom-control-input product-add-status" required="">
+                                    <label class="custom-control-label" for="validationRadio4">Ẩn</label>
+                                </div>
+                            </div>
+                            <button class="btn btn-success btn-block mb-75 waves-effect waves-float waves-light btn-edit-product" type="button">
+                                Cập nhật sản phẩm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+</div>
+

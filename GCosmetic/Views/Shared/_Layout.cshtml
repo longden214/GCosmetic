@@ -1,0 +1,314 @@
+﻿<!doctype html>
+<html class="no-js" lang="zxx">
+@{
+    var configs = ViewBag.Configs;
+}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>@ViewBag.Title</title>
+    <meta name="description" content="@ViewBag.Description">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Favicons -->
+    @foreach (var item in configs)
+    {
+        if (item.id == 6)
+        {
+            <link rel="shortcut icon" href="@item.value">
+        }
+
+    }
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+
+<body class="template-color-1">
+    <!--[if lte IE 9]>
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+    <![endif]-->
+    <!-- Main Wrapper Start Here -->
+    <div class="wrapper">
+        <!-- Main Header Area Start Here -->
+        <!-- Main Header Area Three Start Here -->
+        <header class="header-style-five">
+            <!-- Header Top Start Here -->
+            <div class="header-top">
+                <div class="container">
+                    <div class="col-sm-12">
+                        <div class="row justify-content-lg-between justify-content-center">
+                            <!-- Header Top Left Start -->
+                            <div class="header-top-left order-2 order-lg-1">
+                                <ul>
+                                    @foreach (var item in configs)
+                                    {
+                                        if (item.id == 2)
+                                        {
+                                            <li>
+                                                <a href="javascript:void(0)"><i class="fa fa-phone"></i> @item.value</a>
+                                            </li>
+                                        }
+
+                                        if (item.id == 1)
+                                        {
+                                            <li>
+                                                <a href="javascript:void(0)"><i class="fa fa-envelope-open-o"></i> @item.value</a>
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                            <!-- Header Top Left End -->
+                            <!-- Header Top Right Start -->
+                            <div class="header-top-right order-1 order-lg-2">
+
+                            </div>
+                            <!-- Header Top Right End -->
+                        </div>
+                    </div>
+                </div>
+                <!-- Container End -->
+            </div>
+            <!-- Header Top End Here -->
+            <!-- Header Middle Start Here -->
+            <div class="header-middle stick header-sticky">
+                <div class="header-middle_nav position-relative">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <!-- Logo Start -->
+                            <div class="col-xl-3 col-lg-2 col-6">
+                                <div class="logo">
+                                    @foreach (var item in configs)
+                                    {
+                                        if (item.id == 5)
+                                        {
+                                            <a href="/" title="Logo">
+                                                <img src="@item.value" alt="logo-image">
+                                            </a>
+                                        }
+                                    }
+
+                                </div>
+                            </div>
+                            <!-- Logo End -->
+                            <!-- Menu Area Start Here -->
+                            <div class="col-xl-2 col-lg-2 d-none d-lg-block position-static">
+                                <nav>
+                                </nav>
+                            </div>
+                            <!-- Menu Area End Here -->
+                            <!-- Cart Box Start Here -->
+                            <div class="col-xl-7 col-lg-8 col-6">
+                                <div class="cart-box">
+                                    @{
+                                        var result = "";
+                                        if (ViewBag.result != null)
+                                        {
+                                            result = ViewBag.result;
+                                        }
+                                    }
+                                    <ul>
+                                        <!-- Search Box Start Here -->
+                                        <li class="searchbar-mobile-table">
+                                            <a href="javascript:void(0)" class="url-search">
+                                                <span class="fa fa-search"></span>
+                                            </a>
+                                            <div class="categorie-search-box ht-dropdown search-input">
+                                                <form action="/tim-kiem" method="get">
+                                                    <input type="text" id="search-content-mobile" value="@result" name="search" placeholder="Tìm kiếm sản phẩm">
+                                                    <button type="submit" class="icon-search-top icon-search">
+                                                        <span class="fa fa-search"></span>
+                                                    </button>
+                                                    <div class="autocom-box">
+                                                        <!-- here list are inserted from javascript -->
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </li>
+                                        <!-- Categorie Search Box End Here -->
+
+                                        <li class="search-device-large search-input">
+                                            <form action="/tim-kiem" method="get">
+                                                <input type="text" id="search-content-large" value="@result" name="search" placeholder="Tìm kiếm sản phẩm">
+                                                <button type="submit" style="border:none;">
+                                                    <i class="fa fa-search icon-search-device-large"></i>
+                                                </button>
+                                                <div class="autocom-box">
+                                                    <!-- here list are inserted from javascript -->
+                                                </div>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Cart Box End Here -->
+                        </div>
+                        <!-- Row End -->
+                        <!-- Mobile Menu Start Here -->
+                    </div>
+                    <!-- Mobile Menu End Here -->
+                </div>
+                <!-- Container End -->
+            </div>
+            <!-- Header Middle End Here -->
+        </header>
+        @RenderBody()
+        <footer class="pb-35">
+            <div class="container">
+                <!-- Footer Middle Start -->
+                <div class="footer-middle ptb-90">
+                    <div class="row">
+                        <!-- Single Footer Start -->
+                        <div class="col-lg-6 col-md-6 mb-all-30">
+                            <div class="single-footer">
+                                <div class="footer-logo mb-20">
+                                    @foreach (var item in configs)
+                                    {
+                                        if (item.id == 5)
+                                        {
+                                            <a href="/" title="Logo">
+                                                <img class="img" src="@item.value" alt="logo-img">
+                                            </a>
+                                        }
+                                    }
+                                </div>
+                                <div class="footer-content">
+                                    <ul class="footer-list first-content">
+                                        @foreach (var item in configs)
+                                        {
+                                            if (item.id == 4)
+                                            {
+                                                <li><i class="fa fa-clock-o"></i>Working time: @item.value</li>
+                                            }
+                                            if (item.id == 2)
+                                            {
+                                                <li><i class="fa fa-phone"></i>@item.value</li>
+                                            }
+
+                                            if (item.id == 3)
+                                            {
+                                                <li>
+                                                    <i class="fa fa-map-marker"></i>@item.value.
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Single Footer Start -->
+                        <!-- Single Footer Start -->
+                        <!-- Single Footer Start -->
+                        <!-- Single Footer Start -->
+                        <div class="col-lg-6 col-md-6">
+                            <div class="single-footer">
+                                <div class="single-footer">
+                                    <h4 class="footer-title">Tham gia bản tin của chúng tôi ngay bây giờ</h4>
+                                    <div class="footer-content subscribe-form">
+                                        <div class="subscribe-box">
+                                            <form action="#">
+                                                <input type="text" id="subscribe_email" placeholder="Địa chỉ email của bạn">
+                                                <button type="button" class="fa fa-envelope-open-o"></button>
+                                            </form>
+                                        </div>
+                                        <p class="mt-10">
+                                            Nhận thông tin cập nhật qua E-mail về cửa hàng mới nhất của chúng tôi và các ưu đãi đặc biệt.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Single Footer Start -->
+                    </div>
+                    <!-- Row End -->
+                </div>
+                <!-- Footer Middle End -->
+            </div>
+        </footer>
+        <!-- Footer Area End Here -->
+        <!-- Quick View Content Start -->
+    </div>
+    <!-- Main Wrapper End Here -->
+    <script src="~/Scripts/vendor/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/jquery.countdown.min.js"></script>
+    <script src="~/Scripts/jquery.meanmenu.min.js"></script>
+    <script src="~/Scripts/jquery.scrollUp.js"></script>
+    <script src="~/Scripts/jquery.fancybox.min.js"></script>
+    <script src="~/Scripts/jquery.nice-select.min.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/owl.carousel.min.js"></script>
+    <script src="~/Scripts/popper.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/plugins.js"></script>
+    <script src="~/Scripts/mustache.min.js"></script>
+    <script src="~/Content/admin/assets/js/toastr.min.js"></script>
+    <script src="~/Scripts/main.js"></script>
+    <script src="~/Scripts/style.js"></script>
+
+    <script>
+        $('#search-content-mobile').keyup(function () {
+            var param = $("#search-content-mobile").val();
+
+                $.ajax({
+                    url: '@Url.Action("GetSearchValue","Home")',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: { search: param },
+                    success: function (data) {
+
+                            var htmlList = '';
+                            $.each(data, function (i, item) {
+                                var nameToLower = item.name.toLowerCase();
+                                var uppercaseFirstLetter = nameToLower.charAt(0).toUpperCase() + nameToLower.slice(1);
+                                htmlList += '<li><a href="/chi-tiet/'+item.slug+'-'+item.id+'">' + uppercaseFirstLetter + '</a></li>';
+                            });
+
+                            if (param.length = 0 || param == '') {
+                                $('.categorie-search-box').removeClass('active');
+                                $('.categorie-search-box .autocom-box').html('');
+                            } else {
+                                if (data.length > 0) {
+                                    $('.categorie-search-box').addClass('active');
+                                    $('.categorie-search-box .autocom-box').html(htmlList);
+                                }
+
+                            }
+
+                    }
+                });
+        });
+
+        $('#search-content-large').keyup(function () {
+            var param = $("#search-content-large").val();
+            $.ajax({
+                url: '@Url.Action("GetSearchValue","Home")',
+                type: 'POST',
+                dataType: 'json',
+                data: { search: param },
+                success: function (data) {
+
+                        var htmlList = '';
+                        $.each(data, function (i, item) {
+                            var nameToLower = item.name.toLowerCase();
+                            var uppercaseFirstLetter = nameToLower.charAt(0).toUpperCase() + nameToLower.slice(1);
+                            htmlList += '<li><a href="/chi-tiet/'+item.slug+'-'+item.id+'">' + uppercaseFirstLetter + '</a> </li>';
+                        });
+
+                        if (param.length = 0 || param == '') {
+                            $('.search-device-large').removeClass('active');
+                            $('.search-device-large .autocom-box').html('');
+                        } else {
+                            if (data.length > 0) {
+                                $('.search-device-large').addClass('active');
+                                $('.search-device-large .autocom-box').html(htmlList);
+                            }
+                        }
+                }
+            });
+        });
+
+
+    </script>
+    @RenderSection("fscripts", required: false)
+</body>
+
+</html>
