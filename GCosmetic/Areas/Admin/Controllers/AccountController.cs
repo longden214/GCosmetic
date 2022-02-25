@@ -44,9 +44,9 @@ namespace GCosmetic.Areas.Admin.Controllers
             var verifyUrl = "/Admin/Account/" + emailFor + "/" + activationCode;
             var link = Request.Url.AbsoluteUri.Replace(Request.Url.PathAndQuery, verifyUrl);
 
-            var fromEmail = new MailAddress("longden214@gmail.com", "Reset Password");
+            var fromEmail = new MailAddress("My Email", "Reset Password");
             var toEmail = new MailAddress(emailID);
-            var fromEmailPassword = "ahihi214";
+            var fromEmailPassword = "My Password";
 
             string subject = "";
             string body = "";
