@@ -244,6 +244,7 @@ namespace GCosmetic.Areas.Admin.Controllers
         [HttpPost]
         public JsonResult EditProduct(product productData)
         {
+           
             int Proid = 0;
             try
             {
@@ -276,6 +277,7 @@ namespace GCosmetic.Areas.Admin.Controllers
             }
             catch (Exception)
             {
+                setViewBag(productData.id);
                 return Json(new { proId = Proid }, JsonRequestBehavior.AllowGet);
             }
 
